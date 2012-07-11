@@ -1,0 +1,16 @@
+PACKAGE
+
+package shellquote
+    import "github.com/kballard/go-shellutil"
+
+    Shellquote provides utilities for joining/splitting strings using sh's
+    word-splitting rules.
+
+FUNCTIONS
+
+func Join(args ...string) string
+    Join quotes each argument and joins them with a space. If passed to
+    /bin/sh, the resulting string will be split back into the original
+    arguments.
+
+

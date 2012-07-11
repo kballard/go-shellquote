@@ -36,6 +36,12 @@ func quote(word string, buf *bytes.Buffer) {
 	// everywhere.
 	origLen := buf.Len()
 
+	if len(word) == 0 {
+		// oops, no content
+		buf.WriteString("''")
+		return
+	}
+
 	cur, prev := word, word
 	atStart := true
 	for len(cur) > 0 {

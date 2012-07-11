@@ -1,7 +1,7 @@
 PACKAGE
 
 package shellquote
-    import "github.com/kballard/go-shellutil"
+    import "github.com/kballard/go-shellquote"
 
     Shellquote provides utilities for joining/splitting strings using sh's
     word-splitting rules.

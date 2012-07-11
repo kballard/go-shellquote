@@ -22,7 +22,7 @@ func Join(args ...string) string {
 
 const (
 	specialChars      = "\\'\"`${[|&;<>()*?!"
-	extraSpecialChars = " \t\r\n"
+	extraSpecialChars = " \t\n"
 	prefixChars       = "~"
 )
 

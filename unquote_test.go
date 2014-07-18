@@ -36,7 +36,9 @@ var simpleSplitTest = []struct {
 	{"don\\'t you know the dewey decimal system\\?", []string{"don't", "you", "know", "the", "dewey", "decimal", "system?"}},
 	{"'don'\\''t you know the dewey decimal system?'", []string{"don't you know the dewey decimal system?"}},
 	{"one '' two", []string{"one", "", "two"}},
-	{"text with\\\na newline", []string{"text", "witha", "newline"}},
+	{"text with\\\na backslash-escaped newline", []string{"text", "witha", "backslash-escaped", "newline"}},
+	{"text \"with\\\na\" quoted, backslash-escaped newline", []string{"text", "witha", "quoted,", "backslash-escaped", "newline"}},
+	{"text \"with\na\" quoted, unescaped newline", []string{"text", "with\na", "quoted,", "unescaped" "newline"}},
 	{"\"quoted\\d\\\\\\\" text with a\\\nnewline\"", []string{"quoted\\d\\\" text with anewline"}},
 	{"foo\"bar\"baz", []string{"foobarbaz"}},
 }

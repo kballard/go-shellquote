@@ -34,69 +34,49 @@ func quote(word string, buf *bytes.Buffer) {
 	// with a space because it's typically easier for people to read multi-word
 	// arguments when quoted with a space rather than with ugly backslashes
 	// everywhere.
-	origLen := buf.Len()
-
 	if len(word) == 0 {
 		// oops, no content
 		buf.WriteString("''")
 		return
 	}
 
-	cur, prev := word, word
-	atStart := true
-	for len(cur) > 0 {
-		c, l := utf8.DecodeRuneInString(cur)
-		cur = cur[l:]
-		if strings.ContainsRune(specialChars, c) || (atStart && strings.ContainsRune(prefixChars, c)) {
-			// copy the non-special chars up to this point
-			if len(cur) < len(prev) {
-				buf.WriteString(prev[0 : len(prev)-len(cur)-l])
-			}
-			buf.WriteByte('\\')
-			buf.WriteRune(c)
-			prev = cur
-		} else if strings.ContainsRune(extraSpecialChars, c) {
-			// start over in quote mode
-			buf.Truncate(origLen)
-			goto quote
-		}
-		atStart = false
-	}
-	if len(prev) > 0 {
-		buf.WriteString(prev)
-	}
-	return
+	if strings.ContainsAny(word, extraSpecialChars) {
+		// Use single-quoting for nicer output
+		// (Everything is okay except ' itself, which must be rewritten as '\'',
+		// unless it's at the beginning or end, in which case it can be
+		// simplified to \\')
+		leftTrimmed := strings.TrimLeft(word, "'")
+		numStartingQuotes := len(word) - len(leftTrimmed)
+		trimmed := strings.TrimRight(leftTrimmed, "'")
+		numEndingQuotes := len(leftTrimmed) - len(trimmed)
 
-quote:
-	// quote mode
-	// Use single-quotes, but if we find a single-quote in the word, we need
-	// to terminate the string, emit an escaped quote, and start the string up
-	// again
-	inQuote := false
-	for len(word) > 0 {
-		i := strings.IndexRune(word, '\'')
-		if i == -1 {
-			break
+		for i := 0; i < numStartingQuotes; i++ {
+			buf.WriteString("\\'")
 		}
-		if i > 0 {
-			if !inQuote {
-				buf.WriteByte('\'')
-				inQuote = true
-			}
-			buf.WriteString(word[0:i])
-		}
-		word = word[i+1:]
-		if inQuote {
-			buf.WriteByte('\'')
-			inQuote = false
-		}
-		buf.WriteString("\\'")
-	}
-	if len(word) > 0 {
-		if !inQuote {
-			buf.WriteByte('\'')
-		}
-		buf.WriteString(word)
 		buf.WriteByte('\'')
+		for _, runeValue := range trimmed {
+			if runeValue == '\'' {
+				buf.WriteString("'\\''")
+			} else {
+				buf.WriteRune(runeValue)
+			}
+		}
+		buf.WriteByte('\'')
+		for i := 0; i < numEndingQuotes; i++ {
+			buf.WriteString("\\'")
+		}
+	} else {
+		// Use backslash escaping
+		firstRune, remainderIndex := utf8.DecodeRuneInString(word)
+		if strings.ContainsRune(specialChars, firstRune) || strings.ContainsRune(prefixChars, firstRune) {
+			buf.WriteByte('\\')
+		}
+		buf.WriteRune(firstRune)
+		for _, runeValue := range word[remainderIndex:] {
+			if strings.ContainsRune(specialChars, runeValue) {
+				buf.WriteByte('\\')
+			}
+			buf.WriteRune(runeValue)
+		}
 	}
 }

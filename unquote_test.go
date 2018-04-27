@@ -51,4 +51,5 @@ var errorSplitTest = []struct {
 	{"'test'\\''ing", UnterminatedSingleQuoteError},
 	{"\"foo'bar", UnterminatedDoubleQuoteError},
 	{"foo\\", UnterminatedEscapeError},
+	{"   \\", UnterminatedEscapeError},
 }

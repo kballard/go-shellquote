@@ -21,9 +21,8 @@ func Join(args ...string) string {
 }
 
 const (
-	specialChars      = "\\'\"`${[|&;<>()*?!"
+	specialChars      = "\\'\"`${[|&;<>()*?!~"
 	extraSpecialChars = " \t\n"
-	prefixChars       = "~"
 )
 
 func quote(word string, buf *bytes.Buffer) {
@@ -43,11 +42,10 @@ func quote(word string, buf *bytes.Buffer) {
 	}
 
 	cur, prev := word, word
-	atStart := true
 	for len(cur) > 0 {
 		c, l := utf8.DecodeRuneInString(cur)
 		cur = cur[l:]
-		if strings.ContainsRune(specialChars, c) || (atStart && strings.ContainsRune(prefixChars, c)) {
+		if strings.ContainsRune(specialChars, c) {
 			// copy the non-special chars up to this point
 			if len(cur) < len(prev) {
 				buf.WriteString(prev[0 : len(prev)-len(cur)-l])
@@ -60,7 +58,6 @@ func quote(word string, buf *bytes.Buffer) {
 			buf.Truncate(origLen)
 			goto quote
 		}
-		atStart = false
 	}
 	if len(prev) > 0 {
 		buf.WriteString(prev)

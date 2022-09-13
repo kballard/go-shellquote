@@ -22,10 +22,10 @@ var simpleJoinTest = []struct {
 	{[]string{"hello", "goodbye"}, "hello goodbye"},
 	{[]string{"don't you know the dewey decimal system?"}, "'don'\\''t you know the dewey decimal system?'"},
 	{[]string{"don't", "you", "know", "the", "dewey", "decimal", "system?"}, "don\\'t you know the dewey decimal system\\?"},
-	{[]string{"~user", "u~ser", " ~user", "!~user"}, "\\~user u~ser ' ~user' \\!~user"},
+	{[]string{"~user", "u~ser", " ~user", "!~user"}, "\\~user u\\~ser ' ~user' \\!\\~user"},
 	{[]string{"foo*", "M{ovies,usic}", "ab[cd]", "%3"}, "foo\\* M\\{ovies,usic} ab\\[cd] %3"},
 	{[]string{"one", "", "three"}, "one '' three"},
 	{[]string{"some(parentheses)"}, "some\\(parentheses\\)"},
-	{[]string{"$some_ot~her_)spe!cial_*_characters"}, "\\$some_ot~her_\\)spe\\!cial_\\*_characters"},
+	{[]string{"$some_ot~her_)spe!cial_*_characters"}, "\\$some_ot\\~her_\\)spe\\!cial_\\*_characters"},
 	{[]string{"' "}, "\\'' '"},
 }

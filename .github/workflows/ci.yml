@@ -1,0 +1,53 @@
+---
+name: "ci"
+on:
+  push:
+    # This should disable running the workflow on tags, according to the
+    # on.<push|pull_request>.<branches|tags> GitHub Actions docs.
+    branches:
+      - "*"
+  pull_request:
+    branches:
+      - "master"
+    type:
+      - "opened"
+      - "reopened"
+defaults:
+  run:
+    shell: "bash"
+jobs:
+  lint:
+    name: "[ci|lint]"
+    runs-on: "ubuntu-22.04"
+    steps:
+      - name: "[lint|checkout] ${{ github.repository }} project"
+        uses: "actions/checkout@v4"
+        with:
+          repository: "${{ github.repository }}"
+          token: "${{ github.token }}"
+          fetch-depth: 1
+          clean: true
+          lfs: false
+          persist-credentials: false
+          submodules: false
+      - name: "[lint|run] lint suit"
+        run: |
+          make lint
+  test:
+    name: "[ci|test]"
+    runs-on: "ubuntu-22.04"
+    steps:
+      - name: "[test|checkout] ${{ github.repository }} project"
+        uses: "actions/checkout@v4"
+        with:
+          repository: "${{ github.repository }}"
+          token: "${{ github.token }}"
+          fetch-depth: 1
+          clean: true
+          lfs: false
+          persist-credentials: false
+          submodules: false
+      - name: "[test|run] all available test types"
+        run: |
+          make test
+...

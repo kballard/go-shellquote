@@ -1,12 +1,29 @@
-PACKAGE
+# go-shellquote 
+
+This is a clone of the no longer maintaind project
+[go-shellquote](https://github.com/kballard/go-shellquote), name is kept the
+same, but import path is altered.
+
+The main purpose is to have features like:
+- go.mod
+- release or versioned tags
+- CI with lint and test
+- local lint and test in containers
+
+See: 
+- https://github.com/kballard/go-shellquote/issues/10
+- https://github.com/kballard/go-shellquote/issues/13
+- https://github.com/kballard/go-shellquote/issues/5
+
+## PACKAGE
 
 package shellquote
-    import "github.com/kballard/go-shellquote"
+    import "github.com/Hellseher/go-shellquote"
 
     Shellquote provides utilities for joining/splitting strings using sh's
     word-splitting rules.
 
-VARIABLES
+## VARIABLES
 
 var (
     UnterminatedSingleQuoteError = errors.New("Unterminated single-quoted string")
@@ -15,7 +32,7 @@ var (
 )
 
 
-FUNCTIONS
+## FUNCTIONS
 
 func Join(args ...string) string
     Join quotes each argument and joins them with a space. If passed to
